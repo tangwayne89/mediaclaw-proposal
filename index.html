@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Media Claw · 商業提案</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=DM+Serif+Display:ital@0;1&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0d0f14;
+    --surface: #151820;
+    --surface2: #1c2030;
+    --accent: #e85d26;
+    --accent2: #f5a623;
+    --text: #f0ede8;
+    --muted: #8a8fa3;
+    --border: #252b3b;
+    --blue: #4a9eff;
+    --green: #2dc98a;
+    --purple: #a78bfa;
+  }
+
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--bg); color: var(--text); min-height: 100vh;
+  }
+
+  /* PASSWORD WALL */
+  #pw-wall {
+    position: fixed; inset: 0; background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 9999; flex-direction: column; gap: 24px;
+  }
+  #pw-wall h2 { font-family: 'DM Serif Display', serif; font-size: 28px; }
+  #pw-wall h2 span { color: var(--accent); }
+  #pw-input {
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text); font-size: 20px; letter-spacing: 6px;
+    padding: 12px 24px; border-radius: 8px; text-align: center;
+    width: 200px; outline: none; font-family: 'DM Serif Display', serif;
+    transition: border-color 0.2s;
+  }
+  #pw-input:focus { border-color: var(--accent); }
+  #pw-error { color: var(--accent); font-size: 13px; opacity: 0; transition: opacity 0.2s; }
+  #pw-error.show { opacity: 1; }
+  #pw-hint { font-size: 12px; color: var(--muted); }
+
+  #main { display: none; padding: 40px 24px; }
+  .container { max-width: 860px; margin: 0 auto; }
+
+  /* HEADER */
+  .header {
+    display: flex; align-items: flex-start; gap: 20px;
+    margin-bottom: 40px; padding-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+    position: relative; overflow: hidden;
+  }
+  .header::before {
+    content: '🦞'; position: absolute; right: -10px; top: -20px;
+    font-size: 120px; opacity: 0.07; transform: rotate(-20deg);
+  }
+  .badge {
+    background: var(--accent); color: white; font-size: 11px;
+    font-weight: 700; letter-spacing: 2px; padding: 5px 12px;
+    border-radius: 2px; white-space: nowrap; margin-top: 6px;
+  }
+  .header-text h1 { font-family: 'DM Serif Display', serif; font-size: 38px; line-height: 1.15; letter-spacing: -0.5px; }
+  .header-text h1 span { color: var(--accent); }
+  .header-text p { color: var(--muted); font-size: 14px; margin-top: 8px; font-weight: 300; }
+
+  /* TOP NAV */
+  .top-nav {
+    display: flex; gap: 0; margin-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+  }
+  .top-tab {
+    padding: 10px 22px; font-size: 14px; font-weight: 600;
+    color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent;
+    transition: all 0.2s; background: none;
+    border-top: none; border-left: none; border-right: none;
+    margin-bottom: -1px;
+  }
+  .top-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .top-tab.purple.active { color: var(--purple); border-bottom-color: var(--purple); }
+  .top-page { display: none; }
+  .top-page.active { display: block; }
+
+  .section-label {
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--accent); font-weight: 700; margin-bottom: 20px;
+  }
+  .section-label.purple { color: var(--purple); }
+
+  /* PHASES */
+  .phases { display: flex; flex-direction: column; gap: 16px; margin-bottom: 48px; }
+  .phase-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden; transition: border-color 0.2s;
+  }
+  .phase-card:hover { border-color: var(--accent); }
+  .phase-header { display: flex; align-items: center; padding: 22px 24px; }
+  .phase-num {
+    font-family: 'DM Serif Display', serif; font-size: 48px;
+    color: var(--border); line-height: 1; margin-right: 20px;
+    min-width: 56px; transition: color 0.2s;
+  }
+  .phase-card:hover .phase-num { color: var(--accent); }
+  .phase-meta { flex: 1; }
+  .phase-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .phase-timeline { font-size: 12px; color: var(--muted); font-weight: 300; }
+  .phase-price-block { text-align: right; }
+  .phase-price { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--accent2); display: block; }
+  .phase-price-label { font-size: 11px; color: var(--muted); }
+  .phase-body { padding: 0 24px 24px; border-top: 1px solid var(--border); }
+
+  .deliverables { margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .deliverable-item {
+    display: flex; gap: 10px; align-items: flex-start;
+    background: var(--surface2); border-radius: 8px; padding: 12px 14px;
+  }
+  .deliverable-icon { font-size: 18px; flex-shrink: 0; }
+  .deliverable-text { font-size: 13px; line-height: 1.5; }
+  .deliverable-text strong { display: block; font-weight: 700; }
+  .deliverable-text span { color: var(--muted); font-size: 12px; font-weight: 300; }
+  .highlight-tag {
+    display: inline-block; background: rgba(232,93,38,0.15);
+    border: 1px solid rgba(232,93,38,0.3); color: var(--accent);
+    font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px; margin-top: 8px;
+  }
+
+  /* CAPABILITY BLOCK */
+  .capability-block {
+    margin-top: 20px; background: rgba(45,201,138,0.05);
+    border: 1px solid rgba(45,201,138,0.2); border-radius: 10px; overflow: hidden;
+  }
+  .capability-block-header { padding: 12px 16px; border-bottom: 1px solid rgba(45,201,138,0.15); }
+  .capability-block-header span { font-size: 12px; font-weight: 700; letter-spacing: 1px; color: var(--green); text-transform: uppercase; }
+  .capability-items { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+  .capability-item { display: flex; gap: 10px; align-items: flex-start; }
+  .capability-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); flex-shrink: 0; margin-top: 6px; }
+  .capability-text { font-size: 13px; line-height: 1.6; font-weight: 300; }
+  .capability-text strong { font-weight: 600; color: var(--text); }
+  .capability-footer { padding: 10px 16px; border-top: 1px solid rgba(45,201,138,0.15); font-size: 12px; color: var(--green); font-weight: 300; opacity: 0.8; }
+
+  /* PHASE 4 */
+  .phase-card.phase4 { border-color: rgba(74,158,255,0.3); }
+  .phase-card.phase4:hover { border-color: var(--blue); }
+  .phase-card.phase4 .phase-num { color: rgba(74,158,255,0.2); }
+  .phase-card.phase4:hover .phase-num { color: var(--blue); }
+  .phase-card.phase4 .phase-price { color: var(--blue); }
+  .phase4-badge {
+    display: inline-block; background: rgba(74,158,255,0.12);
+    border: 1px solid rgba(74,158,255,0.3); color: var(--blue);
+    font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+    padding: 3px 9px; border-radius: 3px; margin-left: 10px;
+    vertical-align: middle; text-transform: uppercase;
+  }
+  .phase4-deliverables { margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .phase4-item {
+    display: flex; gap: 10px; align-items: flex-start;
+    background: rgba(74,158,255,0.05); border: 1px solid rgba(74,158,255,0.12);
+    border-radius: 8px; padding: 12px 14px;
+  }
+  .phase4-item-icon { font-size: 18px; flex-shrink: 0; }
+  .phase4-item-text { font-size: 13px; line-height: 1.5; }
+  .phase4-item-text strong { display: block; font-weight: 700; }
+  .phase4-item-text span { color: var(--muted); font-size: 12px; font-weight: 300; }
+
+  .note {
+    font-size: 12px; color: var(--muted); margin-top: 12px; line-height: 1.7;
+    padding: 12px 16px; background: var(--surface2); border-radius: 6px; border-left: 3px solid var(--border);
+  }
+  .note strong { color: var(--text); }
+
+  /* TAB CARD */
+  .tab-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 48px; }
+  .tab-row { display: flex; border-bottom: 1px solid var(--border); }
+  .tab-btn {
+    flex: 1; padding: 14px 8px; text-align: center;
+    font-size: 13px; font-weight: 600; color: var(--muted);
+    cursor: pointer; transition: all 0.2s;
+    background: none; border: none; border-bottom: 2px solid transparent;
+  }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); background: rgba(232,93,38,0.05); }
+  .tab-pane { display: none; padding: 24px; }
+  .tab-pane.active { display: block; }
+
+  .cost-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .cost-row:last-child { border-bottom: none; }
+  .cost-row-label { font-size: 14px; color: var(--muted); font-weight: 300; }
+  .cost-row-label strong { display: block; color: var(--text); font-weight: 500; font-size: 14px; }
+  .cost-row-amount { font-size: 16px; font-weight: 700; font-family: 'DM Serif Display', serif; }
+  .cost-row-amount.alt { color: var(--accent2); }
+  .cost-total {
+    background: var(--surface2); border-radius: 8px; padding: 16px 20px;
+    display: flex; justify-content: space-between; align-items: center; margin-top: 16px;
+  }
+  .cost-total-label { font-size: 14px; font-weight: 700; color: var(--muted); }
+  .cost-total-amount { font-family: 'DM Serif Display', serif; font-size: 32px; color: var(--accent); }
+
+  /* MEETING */
+  .meeting-log { display: flex; flex-direction: column; gap: 24px; }
+  .meeting-entry { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .meeting-entry-header {
+    display: flex; align-items: center; gap: 14px;
+    padding: 16px 20px; background: var(--surface2); border-bottom: 1px solid var(--border);
+  }
+  .meeting-date-badge {
+    background: rgba(74,158,255,0.15); border: 1px solid rgba(74,158,255,0.35);
+    color: var(--blue); font-size: 12px; font-weight: 700;
+    letter-spacing: 1px; padding: 4px 12px; border-radius: 4px; white-space: nowrap;
+  }
+  .meeting-entry-title { font-size: 14px; font-weight: 600; }
+  .meeting-section-block { padding: 16px 20px; border-bottom: 1px solid var(--border); }
+  .meeting-section-block:last-child { border-bottom: none; }
+  .meeting-section-label {
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); font-weight: 700; margin-bottom: 12px;
+  }
+  .meeting-items { display: flex; flex-direction: column; gap: 10px; }
+  .meeting-item { display: flex; gap: 12px; align-items: flex-start; }
+  .m-num {
+    flex-shrink: 0; width: 22px; height: 22px;
+    background: rgba(74,158,255,0.1); border: 1px solid rgba(74,158,255,0.25);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; color: var(--blue); margin-top: 2px;
+  }
+  .m-check {
+    flex-shrink: 0; width: 22px; height: 22px;
+    background: rgba(45,201,138,0.1); border: 1px solid rgba(45,201,138,0.3);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 11px; margin-top: 2px;
+  }
+  .m-next {
+    flex-shrink: 0; width: 22px; height: 22px;
+    background: rgba(245,166,35,0.1); border: 1px solid rgba(245,166,35,0.3);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 11px; margin-top: 2px;
+  }
+  .meeting-item-text { font-size: 14px; line-height: 1.7; font-weight: 300; }
+  .meeting-item-text strong { font-weight: 600; color: var(--text); }
+
+  /* PM PAGE */
+  .pm-coming-soon {
+    border: 1.5px dashed rgba(167,139,250,0.3);
+    border-radius: 16px; padding: 60px 40px;
+    text-align: center; background: rgba(167,139,250,0.03);
+    display: flex; flex-direction: column; align-items: center; gap: 16px;
+  }
+  .pm-icon { font-size: 48px; opacity: 0.6; }
+  .pm-title { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--purple); }
+  .pm-desc { font-size: 14px; color: var(--muted); font-weight: 300; line-height: 1.8; max-width: 400px; }
+  .pm-badge {
+    display: inline-block; background: rgba(167,139,250,0.12);
+    border: 1px solid rgba(167,139,250,0.3); color: var(--purple);
+    font-size: 11px; font-weight: 700; letter-spacing: 2px;
+    padding: 5px 14px; border-radius: 4px; text-transform: uppercase;
+  }
+
+  /* PM PAGE */
+  .pm-intro {
+    background: rgba(167,139,250,0.05); border: 1px solid rgba(167,139,250,0.2);
+    border-radius: 12px; padding: 24px 28px; margin-bottom: 36px;
+  }
+  .pm-intro-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--purple); margin-bottom: 8px; }
+  .pm-intro-desc { font-size: 14px; color: var(--muted); font-weight: 300; line-height: 1.8; }
+
+  .pm-section-label {
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--purple); font-weight: 700; margin-bottom: 16px;
+  }
+
+  .pm-workflow { display: flex; flex-direction: column; }
+  .pm-flow-step {
+    display: flex; gap: 16px; align-items: flex-start;
+    background: var(--surface); border: 1px solid var(--border);
+    border-bottom: none; padding: 18px 20px; position: relative;
+  }
+  .pm-flow-step:first-child { border-radius: 12px 12px 0 0; }
+  .pm-flow-step.last { border-bottom: 1px solid var(--border); border-radius: 0 0 12px 12px; }
+  .pm-flow-icon { font-size: 22px; flex-shrink: 0; width: 36px; text-align: center; margin-top: 2px; }
+  .pm-flow-body { flex: 1; }
+  .pm-flow-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .pm-flow-desc { font-size: 13px; color: var(--muted); font-weight: 300; line-height: 1.6; }
+  .pm-flow-arrow {
+    position: absolute; bottom: -13px; left: 50%; transform: translateX(-50%);
+    font-size: 16px; color: var(--purple); opacity: 0.4; z-index: 1;
+    background: var(--bg); padding: 0 4px; line-height: 1;
+  }
+
+  .pm-dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .pm-dash-item {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px;
+  }
+  .pm-dash-icon { font-size: 20px; flex-shrink: 0; }
+  .pm-dash-text { font-size: 13px; line-height: 1.5; }
+  .pm-dash-text strong { display: block; font-weight: 700; margin-bottom: 3px; }
+  .pm-dash-text span { color: var(--muted); font-size: 12px; font-weight: 300; }
+
+  .pm-pricing { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+  .pm-price-tier {
+    flex: 1; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px 22px;
+  }
+  .pm-price-tier.highlight {
+    border-color: rgba(167,139,250,0.4); background: rgba(167,139,250,0.04);
+  }
+  .pm-price-tier-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .pm-price-tier.highlight .pm-price-tier-label { color: var(--purple); }
+  .pm-price-tier-price { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--text); margin-bottom: 10px; }
+  .pm-price-tier.highlight .pm-price-tier-price { color: var(--purple); }
+  .pm-price-tier-desc { font-size: 12px; color: var(--muted); font-weight: 300; line-height: 1.7; }
+  .pm-price-divider { font-size: 22px; color: var(--border); font-weight: 300; flex-shrink: 0; }
+  .pm-pricing-note {
+    font-size: 12px; color: var(--muted); line-height: 1.7;
+    padding: 12px 16px; background: var(--surface2); border-radius: 6px;
+    border-left: 3px solid rgba(167,139,250,0.3); margin-bottom: 48px;
+  }
+
+  @media (max-width: 600px) {
+    .pm-pricing { flex-direction: column; }
+    .pm-price-divider { display: none; }
+    .pm-dashboard-grid { grid-template-columns: 1fr; }
+  }
+
+  /* FOOTER */
+  .footer {
+    border-top: 1px solid var(--border); padding-top: 32px; margin-top: 8px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-logo { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--accent); }
+  .footer-meta { font-size: 12px; color: var(--muted); text-align: right; }
+
+  @media (max-width: 600px) {
+    .deliverables, .phase4-deliverables { grid-template-columns: 1fr; }
+    .header-text h1 { font-size: 28px; }
+    .phase-num { font-size: 36px; }
+    .phase-price { font-size: 22px; }
+    .cost-total-amount { font-size: 24px; }
+    .top-tab { padding: 10px 12px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- PASSWORD WALL -->
+<div id="pw-wall">
+  <h2>Media <span>Claw</span></h2>
+  <div id="pw-hint">請輸入密碼以查看提案</div>
+  <input id="pw-input" type="password" maxlength="10" placeholder="···" autofocus oninput="checkPw(this.value)" />
+  <div id="pw-error">密碼錯誤，請再試一次</div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+<div class="container">
+
+  <div class="header">
+    <div class="badge">商業提案</div>
+    <div class="header-text">
+      <h1>Media <span>Claw</span></h1>
+      <p>AI 社群自動化行銷系統 · Spera Tech · 2026-03-25</p>
+    </div>
+  </div>
+
+  <div class="top-nav">
+    <button class="top-tab active" onclick="switchTop('proposal', this)">📋 提案內容</button>
+    <button class="top-tab" onclick="switchTop('meeting', this)">📝 會議記錄</button>
+    <button class="top-tab purple" onclick="switchTop('pm', this)">🦞 龍蝦專案經理</button>
+  </div>
+
+  <!-- PAGE: PROPOSAL -->
+  <div class="top-page active" id="page-proposal">
+    <div class="section-label">四大階段 · 交付內容</div>
+    <div class="phases">
+
+      <div class="phase-card">
+        <div class="phase-header">
+          <div class="phase-num">01</div>
+          <div class="phase-meta">
+            <div class="phase-title">基礎建置 ＋ 個人助理龍蝦</div>
+            <div class="phase-timeline">📅 第 1–4 週</div>
+          </div>
+          <div class="phase-price-block">
+            <span class="phase-price">NT$121,411</span>
+            <div class="phase-price-label">一次性費用（含採購）</div>
+          </div>
+        </div>
+        <div class="phase-body">
+          <div class="deliverables">
+            <div class="deliverable-item">
+              <div class="deliverable-icon">🏗️</div>
+              <div class="deliverable-text"><strong>整套技術底層建置</strong><span>多帳號隔離環境、防偵測架構、伺服器配置</span></div>
+            </div>
+            <div class="deliverable-item">
+              <div class="deliverable-icon">🤖</div>
+              <div class="deliverable-text">
+                <strong>Media Claw #0 個人助理</strong><span>在群組中 tag 呼叫，做趨勢查詢與 AI 問答</span>
+                <div class="highlight-tag">✨ 第 4 週即可體驗</div>
+              </div>
+            </div>
+            <div class="deliverable-item">
+              <div class="deliverable-icon">🖥️</div>
+              <div class="deliverable-text"><strong>硬體採購到位</strong><span>Mac mini M4 ×3、帳號池、VPN、Proxy 全套</span></div>
+            </div>
+            <div class="deliverable-item">
+              <div class="deliverable-icon">🔬</div>
+              <div class="deliverable-text"><strong>架構可行性驗證</strong><span>確認各項技術路徑有效，作為 Phase 2 全面部署依據</span></div>
+            </div>
+          </div>
+          <div class="capability-block">
+            <div class="capability-block-header"><span>✦ Phase 1 完成後 · 預期交付能力</span></div>
+            <div class="capability-items">
+              <div class="capability-item">
+                <div class="capability-dot"></div>
+                <div class="capability-text"><strong>主動觸發任務（定期排程）</strong>：新聞整理、研究報告等，按排程自動產出，無需人工啟動</div>
+              </div>
+              <div class="capability-item">
+                <div class="capability-dot"></div>
+                <div class="capability-text"><strong>被動觸發任務（按需產生）</strong>：貼上影片連結，龍蝦自動爬取逐字稿與摘要，分類儲存為「好腳本 / 壞腳本」案例庫</div>
+              </div>
+            </div>
+            <div class="capability-footer">💡 案例庫將作為 Phase 2、3 的訓練素材與腳本參考基礎，越早建立越有價值</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-header">
+          <div class="phase-num">02</div>
+          <div class="phase-meta">
+            <div class="phase-title">8 隻網軍 ＋ 品牌小編 ＋ 控制台</div>
+            <div class="phase-timeline">📅 第 3–8 週</div>
+          </div>
+          <div class="phase-price-block">
+            <span class="phase-price">NT$120,000</span>
+            <div class="phase-price-label">一次性費用</div>
+          </div>
+        </div>
+        <div class="phase-body">
+          <div class="deliverables">
+            <div class="deliverable-item">
+              <div class="deliverable-icon">🦞</div>
+              <div class="deliverable-text"><strong>8 隻互動龍蝦上線</strong><span>24/7 滑動態、按讚、留言、追蹤，每隻獨立身份模擬真人</span></div>
+            </div>
+            <div class="deliverable-item">
+              <div class="deliverable-icon">💬</div>
+              <div class="deliverable-text"><strong>品牌小編龍蝦</strong><span>自動監控並回覆主帳號留言，支援人工訓練，越用越準</span></div>
+            </div>
+            <div class="deliverable-item">
+              <div class="deliverable-icon">📊</div>
+              <div class="deliverable-text"><strong>龍蝦工作室控制台</strong><span>視覺化儀表板，隨時掌握所有龍蝦的狀態與互動成效</span></div>
+            </div>
+            <div class="deliverable-item">
+              <div class="deliverable-icon">🔄</div>
+              <div class="deliverable-text"><strong>Human-in-the-Loop 訓練</strong><span>你審核、它學習，從半自動逐步成長為全自動回覆</span></div>
+            </div>
+          </div>
+          <p class="note">💡 <strong>Phase 2 後開始收月費</strong>：NT$60,200/mo（不含 AI Token 實耗），預期可取代 2–3 名社群操作人員工作量。</p>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-header">
+          <div class="phase-num">03</div>
+          <div class="phase-meta">
+            <div class="phase-title">腳本企劃 ＋ 素材管理龍蝦</div>
+            <div class="phase-timeline">📅 第 9–12 週</div>
+          </div>
+          <div class="phase-price-block">
+            <span class="phase-price">NT$80,000</span>
+            <div class="phase-price-label">一次性費用</div>
+          </div>
+        </div>
+        <div class="phase-body">
+          <div class="deliverables">
+            <div class="deliverable-item">
+              <div class="deliverable-icon">🎬</div>
+              <div class="deliverable-text"><strong>腳本企劃龍蝦</strong><span>追蹤平台趨勢、分析高互動影片，提供腳本方向與拍攝建議</span></div>
+            </div>
+            <div class="deliverable-item">
+              <div class="deliverable-icon">🗂️</div>
+              <div class="deliverable-text"><strong>素材收集龍蝦</strong><span>自動監控素材資料夾、分類標記，一句話就能找到需要的片段</span></div>
+            </div>
+          </div>
+          <p class="note">💡 <strong>Phase 3 後月費累加</strong>：每月再加 NT$40,000，總月費 NT$100,200/mo。預期讓專業人員產出效率提升 <strong>3–5 倍</strong>。</p>
+        </div>
+      </div>
+
+      <div class="phase-card phase4">
+        <div class="phase-header">
+          <div class="phase-num">04</div>
+          <div class="phase-meta">
+            <div class="phase-title">龍蝦 KOL 搬運工 <span class="phase4-badge">擴充階段</span></div>
+            <div class="phase-timeline">📅 可於 Phase 3 完成後進行討論開發</div>
+          </div>
+          <div class="phase-price-block">
+            <span class="phase-price" style="font-size:20px;">另外研究報價</span>
+            <div class="phase-price-label">跨平台內容自動化</div>
+          </div>
+        </div>
+        <div class="phase-body">
+          <div class="phase4-deliverables">
+            <div class="phase4-item">
+              <div class="phase4-item-icon">🔍</div>
+              <div class="phase4-item-text"><strong>跨平台內容監控</strong><span>自動爬取 YouTube、TikTok、IG 等平台高互動內容與趨勢話題</span></div>
+            </div>
+            <div class="phase4-item">
+              <div class="phase4-item-icon">✍️</div>
+              <div class="phase4-item-text"><strong>AI 改寫發文</strong><span>以品牌語氣重新改寫，產出適合各平台的貼文格式</span></div>
+            </div>
+            <div class="phase4-item">
+              <div class="phase4-item-icon">📆</div>
+              <div class="phase4-item-text"><strong>自動排程發布</strong><span>依平台最佳時段排入發文佇列，全自動執行</span></div>
+            </div>
+            <div class="phase4-item">
+              <div class="phase4-item-icon">🛡️</div>
+              <div class="phase4-item-text"><strong>原創度把關機制</strong><span>改寫加入差異化處理，降低平台審查風險</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section-label">費用總覽</div>
+    <div class="tab-card">
+      <div class="tab-row">
+        <button class="tab-btn active" onclick="switchCost('onetime', this)">💰 一次性費用</button>
+        <button class="tab-btn" onclick="switchCost('monthly', this)">📅 月費</button>
+      </div>
+      <div class="tab-pane active" id="cost-onetime">
+        <div class="cost-row">
+          <div class="cost-row-label"><strong>Phase 1｜基礎建置</strong>含硬體採購 NT$101,411 + 服務費 NT$20,000</div>
+          <div class="cost-row-amount">NT$121,411</div>
+        </div>
+        <div class="cost-row">
+          <div class="cost-row-label"><strong>Phase 2｜8 隻網軍 + 小編 + 控制台</strong></div>
+          <div class="cost-row-amount">NT$120,000</div>
+        </div>
+        <div class="cost-row">
+          <div class="cost-row-label"><strong>Phase 3｜腳本企劃 + 素材收集龍蝦</strong></div>
+          <div class="cost-row-amount">NT$80,000</div>
+        </div>
+        <div class="cost-row">
+          <div class="cost-row-label"><strong>Phase 4｜龍蝦 KOL 搬運工</strong>跨平台內容監控與自動發布</div>
+          <div class="cost-row-amount alt">另議</div>
+        </div>
+        <div class="cost-total">
+          <div class="cost-total-label">Phase 1–3 總計</div>
+          <div class="cost-total-amount">NT$321,411</div>
+        </div>
+
+      </div>
+      <div class="tab-pane" id="cost-monthly">
+        <div class="cost-row">
+          <div class="cost-row-label"><strong>基礎建設維運</strong>VPN、Proxy、帳號補充</div>
+          <div class="cost-row-amount">NT$7,200</div>
+        </div>
+        <div class="cost-row">
+          <div class="cost-row-label"><strong>龍蝦維護費 ×8</strong>行為調校、異常處理、被封替換</div>
+          <div class="cost-row-amount">NT$40,000</div>
+        </div>
+        <div class="cost-row">
+          <div class="cost-row-label"><strong>品牌小編龍蝦維護</strong>分類優化、HITL 訓練持續進行</div>
+          <div class="cost-row-amount">NT$8,000</div>
+        </div>
+        <div class="cost-row">
+          <div class="cost-row-label"><strong>月報與數據分析</strong>互動成效 + 帳號健康 + 優化建議</div>
+          <div class="cost-row-amount">NT$5,000</div>
+        </div>
+        <div class="cost-row">
+          <div class="cost-row-label"><strong>AI Token 消耗</strong>依實際互動量實報（附於月報）</div>
+          <div class="cost-row-amount alt">另計實報</div>
+        </div>
+        <div class="cost-total">
+          <div class="cost-total-label">Phase 2 後月費小計</div>
+          <div class="cost-total-amount">NT$60,200/mo</div>
+        </div>
+        <div class="cost-row" style="margin-top:16px">
+          <div class="cost-row-label"><strong>+ 腳本企劃龍蝦維護</strong>Phase 3 上線後累加</div>
+          <div class="cost-row-amount">NT$20,000</div>
+        </div>
+        <div class="cost-row">
+          <div class="cost-row-label"><strong>+ 素材收集龍蝦維護</strong>Phase 3 上線後累加</div>
+          <div class="cost-row-amount">NT$20,000</div>
+        </div>
+        <div class="cost-total">
+          <div class="cost-total-label">Phase 3 後月費合計</div>
+          <div class="cost-total-amount">NT$100,200/mo</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE: MEETING -->
+  <div class="top-page" id="page-meeting">
+    <div class="section-label">會議記錄 · 更新日誌</div>
+    <div class="meeting-log">
+      <div class="meeting-entry">
+        <div class="meeting-entry-header">
+          <div class="meeting-date-badge">2026 / 04 / 02</div>
+          <div class="meeting-entry-title">第一次對齊會議</div>
+        </div>
+
+        <!-- 會議討論事項 -->
+        <div class="meeting-section-block">
+          <div class="meeting-section-label">會議討論事項</div>
+          <div class="meeting-items">
+            <div class="meeting-item">
+              <div class="m-num">1</div>
+              <div class="meeting-item-text"><strong>平台策略調整</strong>：方向修改為以 <strong>Facebook / Instagram 為主，TikTok 為輔</strong>的爬取與互動模式，後續技術架構與帳號規劃將依此更新。</div>
+            </div>
+            <div class="meeting-item">
+              <div class="m-num">2</div>
+              <div class="meeting-item-text"><strong>軟硬體需求申請</strong>：若有軟硬體需求，可按需與吳老闆申請討論。</div>
+            </div>
+            <div class="meeting-item">
+              <div class="m-num">3</div>
+              <div class="meeting-item-text"><strong>新增「龍蝦專案經理」需求</strong>：此為獨立新專案，另外開專案處理，不納入 Media Claw 現有階段。</div>
+            </div>
+            <div class="meeting-item">
+              <div class="m-num">4</div>
+              <div class="meeting-item-text"><strong>新增「龍蝦 KOL」需求</strong>：已新增至 Phase 4，雙方將逐步拆解開發，時程與報價另議。</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 進度報告 -->
+        <div class="meeting-section-block">
+          <div class="meeting-section-label">進度報告</div>
+          <div class="meeting-items">
+            <div class="meeting-item">
+              <div class="m-check">✓</div>
+              <div class="meeting-item-text">初步 <strong>Line Channel 串接</strong>完成</div>
+            </div>
+            <div class="meeting-item">
+              <div class="m-check">✓</div>
+              <div class="meeting-item-text"><strong>FB / IG / TK / Threads</strong> 用戶丟連結觸發情境實驗完成</div>
+            </div>
+            <div class="meeting-item">
+              <div class="m-next">→</div>
+              <div class="meeting-item-text"><strong>下一步</strong>：Line 群組機制與主動、被動任務設計完成，整合既有機制並向下研究下一階段機制</div>
+            </div>
+            <div class="meeting-item">
+              <div class="m-next">→</div>
+              <div class="meeting-item-text"><strong>Phase 2 預期關鍵研究方向</strong>：讓 Agent 具備 Browser Use 能力，可直接操作瀏覽器執行任務，以及多 Agent 之間的管理協作能力</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="meeting-entry">
+        <div class="meeting-entry-header">
+          <div class="meeting-date-badge">2026 / 04 / 15</div>
+          <div class="meeting-entry-title">第二次對齊會議（預計）</div>
+        </div>
+        <div class="meeting-section-block">
+          <div class="meeting-section-label">預定議程</div>
+          <div class="meeting-items">
+            <div class="meeting-item">
+              <div class="m-next">→</div>
+              <div class="meeting-item-text"><strong>Stage 1 交付</strong>：確認 Phase 1 交付成果，現場展示與驗收</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="top-page" id="page-pm">
+    <div class="section-label purple">獨立專案 · 龍蝦專案經理</div>
+
+    <!-- INTRO -->
+    <div class="pm-intro">
+      <div class="pm-intro-text">
+        <div class="pm-intro-title">住在 Line 裡的龍蝦經理</div>
+        <div class="pm-intro-desc">老闆指派任務，龍蝦自動開票、追蹤、提醒、記錄。搭配視覺化後台，所有員工任務與 KPI 一目了然，不需要切換任何工具。</div>
+      </div>
+    </div>
+
+    <!-- WORKFLOW -->
+    <div class="pm-section-label">核心 Workflow · 自動化流程</div>
+    <div class="pm-workflow">
+
+      <div class="pm-flow-step">
+        <div class="pm-flow-icon">📋</div>
+        <div class="pm-flow-body">
+          <div class="pm-flow-title">任務指派 → 自動開票</div>
+          <div class="pm-flow-desc">老闆在 Line 群組指派任務，龍蝦自動識別任務內容、負責人、截止日期，建立任務票並回報確認。</div>
+        </div>
+        <div class="pm-flow-arrow">↓</div>
+      </div>
+
+      <div class="pm-flow-step">
+        <div class="pm-flow-icon">⏰</div>
+        <div class="pm-flow-body">
+          <div class="pm-flow-title">截止前主動提醒</div>
+          <div class="pm-flow-desc">依設定時間（如截止前 24 小時、3 小時）自動在 Line 提醒負責員工，確保不漏接。</div>
+        </div>
+        <div class="pm-flow-arrow">↓</div>
+      </div>
+
+      <div class="pm-flow-step">
+        <div class="pm-flow-icon">✅</div>
+        <div class="pm-flow-body">
+          <div class="pm-flow-title">完成回報 → 自動記錄</div>
+          <div class="pm-flow-desc">員工回報完成後，龍蝦自動記錄完成時間、耗時、產出摘要，寫入任務歷史。</div>
+        </div>
+        <div class="pm-flow-arrow">↓</div>
+      </div>
+
+      <div class="pm-flow-step">
+        <div class="pm-flow-icon">🚨</div>
+        <div class="pm-flow-body">
+          <div class="pm-flow-title">逾期 → 通知主管 + 員工</div>
+          <div class="pm-flow-desc">任務逾期未完成，龍蝦立即通知主管與負責員工，標記任務狀態為逾期。</div>
+        </div>
+        <div class="pm-flow-arrow">↓</div>
+      </div>
+
+      <div class="pm-flow-step last">
+        <div class="pm-flow-icon">📢</div>
+        <div class="pm-flow-body">
+          <div class="pm-flow-title">逾期後每日催繳</div>
+          <div class="pm-flow-desc">逾期任務每天自動發送提醒，直到完成或主管手動關閉，不讓任何任務消失在黑洞裡。</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="pm-section-label" style="margin-top: 40px;">後台儀表板 · 可視化管理</div>
+    <div class="pm-dashboard-grid">
+      <div class="pm-dash-item">
+        <div class="pm-dash-icon">👥</div>
+        <div class="pm-dash-text">
+          <strong>員工任務總覽</strong>
+          <span>每位員工當前任務量、進行中 / 已完成 / 逾期狀態一覽</span>
+        </div>
+      </div>
+      <div class="pm-dash-item">
+        <div class="pm-dash-icon">📊</div>
+        <div class="pm-dash-text">
+          <strong>KPI 達成狀況</strong>
+          <span>按週 / 月統計各員工任務完成率、準時率、逾期次數</span>
+        </div>
+      </div>
+      <div class="pm-dash-item">
+        <div class="pm-dash-icon">⚡</div>
+        <div class="pm-dash-text">
+          <strong>即時執行狀況</strong>
+          <span>哪些任務正在進行、哪些已逾期、哪些等待回應，即時呈現</span>
+        </div>
+      </div>
+      <div class="pm-dash-item">
+        <div class="pm-dash-icon">🏆</div>
+        <div class="pm-dash-text">
+          <strong>員工表現報告</strong>
+          <span>個人績效歷史紀錄，可匯出作為考核參考依據</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRICING NOTE -->
+    <div class="pm-pricing-note" style="margin-top: 40px;">
+      💡 <strong style="color: var(--text);">報價說明</strong>：將於規劃實作方法與系統規格後提供正式報價，確保報價貼近實際開發範疇。
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <div class="footer-logo">Spera Tech</div>
+    <div class="footer-meta">v1.4 · 2026-04-02<br>提案方：Spera Tech</div>
+  </div>
+
+</div>
+</div>
+
+<script>
+  const CORRECT = '666';
+  function checkPw(val) {
+    if (val === CORRECT) {
+      sessionStorage.setItem('mc_auth', '1');
+      document.getElementById('pw-wall').style.display = 'none';
+      document.getElementById('main').style.display = 'block';
+    } else if (val.length >= CORRECT.length) {
+      const err = document.getElementById('pw-error');
+      err.classList.add('show');
+      setTimeout(() => { document.getElementById('pw-input').value = ''; err.classList.remove('show'); }, 1200);
+    }
+  }
+  if (sessionStorage.getItem('mc_auth') === '1') {
+    document.getElementById('pw-wall').style.display = 'none';
+    document.getElementById('main').style.display = 'block';
+  }
+  function switchTop(id, el) {
+    document.querySelectorAll('.top-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.top-page').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('page-' + id).classList.add('active');
+  }
+  function switchCost(id, el) {
+    el.closest('.tab-card').querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+    el.closest('.tab-card').querySelectorAll('.tab-pane').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('cost-' + id).classList.add('active');
+  }
+</script>
+</body>
+</html>
