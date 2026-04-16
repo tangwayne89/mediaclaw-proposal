@@ -335,6 +335,10 @@
     color: var(--green); font-size: 11px; font-weight: 700;
     letter-spacing: 1.5px; padding: 5px 12px; border-radius: 4px;
     text-transform: uppercase; margin-bottom: 6px; white-space: nowrap;
+    cursor: pointer; transition: background 0.2s, border-color 0.2s;
+  }
+  .phase-status-done:hover {
+    background: rgba(45,201,138,0.22); border-color: rgba(45,201,138,0.6);
   }
   .phase-status-prep {
     display: inline-flex; align-items: center; gap: 6px;
@@ -498,7 +502,7 @@
             <div class="phase-timeline">📅 第 1–4 週</div>
           </div>
           <div class="phase-price-block">
-            <div class="phase-status-done">✓ 已完成</div>
+            <div class="phase-status-done" onclick="openCarousel()" title="查看交付成果">✓ 已完成 &nbsp;📷</div>
             <span class="phase-price">NT$121,411</span>
             <div class="phase-price-label">一次性費用（含採購）</div>
           </div>
@@ -1017,7 +1021,7 @@
       </div>
     </div>
     <div style="margin-top:20px; padding:18px 22px; border-left:3px solid rgba(167,139,250,0.5); background:rgba(167,139,250,0.04); border-radius:0 8px 8px 0; font-size:14px; color:var(--muted); font-weight:300; line-height:1.8;">
-      在 AI 時代打造 AI 原生的公司底層，開始累積資料與工作流程，為未來超高效的公司架構打造堅實基礎。
+      在 AI 時代打造 AI 原生的公司地基，開始累積資料與工作流程，為 future 10 倍效率的公司架構打造堅實基礎。
     </div>
 
   </div>
@@ -1058,6 +1062,120 @@
     el.closest('.tab-card').querySelectorAll('.tab-pane').forEach(t => t.classList.remove('active'));
     el.classList.add('active');
     document.getElementById('cost-' + id).classList.add('active');
+  }
+</script>
+
+<!-- CAROUSEL MODAL -->
+<style>
+  #carousel-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.88);
+    z-index: 99999; display: none; align-items: center; justify-content: center;
+    flex-direction: column; gap: 16px;
+  }
+  #carousel-overlay.open { display: flex; }
+  #carousel-close {
+    position: absolute; top: 20px; right: 24px;
+    font-size: 28px; color: rgba(255,255,255,0.5); cursor: pointer;
+    background: none; border: none; line-height: 1; transition: color 0.2s;
+  }
+  #carousel-close:hover { color: #fff; }
+  #carousel-img-wrap {
+    position: relative; display: flex; align-items: center; justify-content: center;
+    width: 100%; max-width: 520px; padding: 0 56px;
+  }
+  #carousel-img {
+    max-width: 100%; max-height: 72vh;
+    border-radius: 12px; object-fit: contain;
+    transition: opacity 0.2s ease;
+  }
+  .carousel-arrow {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    color: #fff; font-size: 22px; width: 44px; height: 44px;
+    border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s; user-select: none;
+  }
+  .carousel-arrow:hover { background: rgba(255,255,255,0.22); }
+  #carousel-prev { left: 0; }
+  #carousel-next { right: 0; }
+  #carousel-dots { display: flex; gap: 8px; }
+  .carousel-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: rgba(255,255,255,0.25); cursor: pointer; transition: background 0.2s;
+  }
+  .carousel-dot.active { background: #fff; }
+  #carousel-counter { font-size: 12px; color: rgba(255,255,255,0.35); letter-spacing: 1px; }
+</style>
+
+<div id="carousel-overlay" onclick="handleOverlayClick(event)">
+  <button id="carousel-close" onclick="closeCarousel()">✕</button>
+  <div id="carousel-img-wrap">
+    <button class="carousel-arrow" id="carousel-prev" onclick="carouselStep(-1)">‹</button>
+    <img id="carousel-img" src="" alt="Phase 1 交付成果" />
+    <button class="carousel-arrow" id="carousel-next" onclick="carouselStep(1)">›</button>
+  </div>
+  <div id="carousel-dots"></div>
+  <div id="carousel-counter"></div>
+</div>
+
+<script>
+  const CAROUSEL_IMGS = [
+    'images/phase1_1.jpg',
+    'images/phase1_2.jpg',
+    'images/phase1_3.jpg',
+    'images/phase1_4.jpg',
+    'images/phase1_5.jpg'
+  ];
+  let carouselIdx = 0;
+
+  function openCarousel() {
+    carouselIdx = 0;
+    buildDots();
+    renderCarousel();
+    document.getElementById('carousel-overlay').classList.add('open');
+    document.addEventListener('keydown', carouselKey);
+  }
+  function closeCarousel() {
+    document.getElementById('carousel-overlay').classList.remove('open');
+    document.removeEventListener('keydown', carouselKey);
+  }
+  function handleOverlayClick(e) {
+    if (e.target === document.getElementById('carousel-overlay')) closeCarousel();
+  }
+  function carouselStep(dir) {
+    carouselIdx = (carouselIdx + dir + CAROUSEL_IMGS.length) % CAROUSEL_IMGS.length;
+    renderCarousel();
+  }
+  function carouselGoTo(i) {
+    carouselIdx = i;
+    renderCarousel();
+  }
+  function renderCarousel() {
+    const img = document.getElementById('carousel-img');
+    img.style.opacity = '0';
+    setTimeout(() => {
+      img.src = CAROUSEL_IMGS[carouselIdx];
+      img.style.opacity = '1';
+    }, 120);
+    document.getElementById('carousel-counter').textContent = (carouselIdx + 1) + ' / ' + CAROUSEL_IMGS.length;
+    document.querySelectorAll('.carousel-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === carouselIdx);
+    });
+  }
+  function buildDots() {
+    const wrap = document.getElementById('carousel-dots');
+    wrap.innerHTML = '';
+    CAROUSEL_IMGS.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+      d.onclick = () => carouselGoTo(i);
+      wrap.appendChild(d);
+    });
+  }
+  function carouselKey(e) {
+    if (e.key === 'ArrowLeft') carouselStep(-1);
+    if (e.key === 'ArrowRight') carouselStep(1);
+    if (e.key === 'Escape') closeCarousel();
   }
 </script>
 </body>
