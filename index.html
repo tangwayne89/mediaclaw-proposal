@@ -328,6 +328,81 @@
     .pm-dashboard-grid { grid-template-columns: 1fr; }
   }
 
+  /* PHASE STATUS BADGES */
+  .phase-status-done {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(45,201,138,0.12); border: 1px solid rgba(45,201,138,0.35);
+    color: var(--green); font-size: 11px; font-weight: 700;
+    letter-spacing: 1.5px; padding: 5px 12px; border-radius: 4px;
+    text-transform: uppercase; margin-bottom: 6px; white-space: nowrap;
+  }
+  .phase-status-prep {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(245,166,35,0.12); border: 1px solid rgba(245,166,35,0.35);
+    color: var(--accent2); font-size: 11px; font-weight: 700;
+    letter-spacing: 1.5px; padding: 5px 12px; border-radius: 4px;
+    text-transform: uppercase; margin-bottom: 6px; white-space: nowrap;
+  }
+
+  /* PREWORK BLOCK */
+  .prework-block {
+    margin-top: 20px; background: rgba(245,166,35,0.05);
+    border: 1px solid rgba(245,166,35,0.2); border-radius: 10px; overflow: hidden;
+  }
+  .prework-block-header { padding: 12px 16px; border-bottom: 1px solid rgba(245,166,35,0.15); }
+  .prework-block-header span { font-size: 12px; font-weight: 700; letter-spacing: 1px; color: var(--accent2); text-transform: uppercase; }
+  .prework-items { padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; }
+  .prework-item { display: flex; gap: 10px; align-items: flex-start; }
+  .prework-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); flex-shrink: 0; margin-top: 6px; }
+  .prework-text { font-size: 13px; line-height: 1.6; font-weight: 300; }
+  .prework-text strong { font-weight: 600; color: var(--text); }
+  .prework-tag { display: inline-block; background: rgba(245,166,35,0.15); border: 1px solid rgba(245,166,35,0.25); color: var(--accent2); font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 3px; margin-left: 6px; }
+
+  /* LINE INTERFACE BLOCK */
+  .line-interface-block {
+    margin-top: 20px; background: rgba(74,158,255,0.05);
+    border: 1px solid rgba(74,158,255,0.2); border-radius: 10px; overflow: hidden;
+  }
+  .line-interface-block-header { padding: 12px 16px; border-bottom: 1px solid rgba(74,158,255,0.15); }
+  .line-interface-block-header span { font-size: 12px; font-weight: 700; letter-spacing: 1px; color: var(--blue); text-transform: uppercase; }
+  .line-interface-items { padding: 14px 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .line-interface-item { display: flex; gap: 10px; align-items: flex-start; background: rgba(74,158,255,0.05); border: 1px solid rgba(74,158,255,0.1); border-radius: 8px; padding: 12px 14px; }
+  .line-interface-item-icon { font-size: 18px; flex-shrink: 0; }
+  .line-interface-item-text { font-size: 13px; line-height: 1.5; }
+  .line-interface-item-text strong { display: block; font-weight: 700; }
+  .line-interface-item-text span { color: var(--muted); font-size: 12px; font-weight: 300; }
+
+  /* SHRIMP EDITOR SECTION */
+  .shrimp-editor-section {
+    margin-top: 48px; padding-top: 40px; border-top: 1px solid var(--border);
+  }
+  .shrimp-editor-intro {
+    background: rgba(74,158,255,0.05); border: 1px solid rgba(74,158,255,0.2);
+    border-radius: 12px; padding: 24px 28px; margin-bottom: 24px;
+  }
+  .shrimp-editor-intro-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--blue); margin-bottom: 8px; }
+  .shrimp-editor-intro-desc { font-size: 14px; color: var(--muted); font-weight: 300; line-height: 1.8; }
+  .shrimp-editor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+  .shrimp-editor-item { display: flex; gap: 12px; align-items: flex-start; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+  .shrimp-editor-item-icon { font-size: 20px; flex-shrink: 0; }
+  .shrimp-editor-item-text { font-size: 13px; line-height: 1.5; }
+  .shrimp-editor-item-text strong { display: block; font-weight: 700; margin-bottom: 3px; }
+  .shrimp-editor-item-text span { color: var(--muted); font-size: 12px; font-weight: 300; }
+  .shrimp-editor-pricing {
+    background: rgba(74,158,255,0.06); border: 1px solid rgba(74,158,255,0.25);
+    border-radius: 10px; padding: 20px 24px;
+    display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  }
+  .shrimp-editor-pricing-label { font-size: 13px; color: var(--muted); font-weight: 300; }
+  .shrimp-editor-pricing-label strong { display: block; font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .shrimp-editor-pricing-amount { text-align: right; flex-shrink: 0; }
+  .shrimp-editor-price-main { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--blue); display: block; }
+  .shrimp-editor-price-sub { font-size: 13px; color: var(--muted); }
+
+  @media (max-width: 600px) {
+    .line-interface-items, .shrimp-editor-grid { grid-template-columns: 1fr; }
+  }
+
   /* FOOTER */
   .footer {
     border-top: 1px solid var(--border); padding-top: 32px; margin-top: 8px;
@@ -387,6 +462,7 @@
             <div class="phase-timeline">📅 第 1–4 週</div>
           </div>
           <div class="phase-price-block">
+            <div class="phase-status-done">✓ 已完成</div>
             <span class="phase-price">NT$121,411</span>
             <div class="phase-price-label">一次性費用（含採購）</div>
           </div>
@@ -438,6 +514,7 @@
             <div class="phase-timeline">📅 第 3–8 週</div>
           </div>
           <div class="phase-price-block">
+            <div class="phase-status-prep">⚙ 準備開發</div>
             <span class="phase-price">NT$120,000</span>
             <div class="phase-price-label">一次性費用</div>
           </div>
@@ -459,6 +536,23 @@
             <div class="deliverable-item">
               <div class="deliverable-icon">🔄</div>
               <div class="deliverable-text"><strong>Human-in-the-Loop 訓練</strong><span>你審核、它學習，從半自動逐步成長為全自動回覆</span></div>
+            </div>
+          </div>
+          <div class="prework-block">
+            <div class="prework-block-header"><span>⚙ 前置作業 · 開發啟動前準備</span></div>
+            <div class="prework-items">
+              <div class="prework-item">
+                <div class="prework-dot"></div>
+                <div class="prework-text"><strong>設計 8 隻網軍角色</strong><span class="prework-tag">2 週</span><br>為每隻龍蝦建立獨特身份、性格、發言風格與行為模式，確保模擬真實人類互動</div>
+              </div>
+              <div class="prework-item">
+                <div class="prework-dot"></div>
+                <div class="prework-text"><strong>合約草擬與確認</strong><br>雙方確認服務範疇、SLA 與付款條款，完成後正式啟動開發</div>
+              </div>
+              <div class="prework-item">
+                <div class="prework-dot"></div>
+                <div class="prework-text"><strong>Phase 2 開發</strong><span class="prework-tag">~2 個月</span><br>8 隻互動龍蝦、品牌小編、控制台全面部署上線</div>
+              </div>
             </div>
           </div>
           <p class="note">💡 <strong>Phase 2 後開始收月費</strong>：NT$60,200/mo（不含 AI Token 實耗），預期可取代 2–3 名社群操作人員工作量。</p>
@@ -672,6 +766,30 @@
         </div>
       </div>
 
+      <div class="meeting-entry">
+        <div class="meeting-entry-header">
+          <div class="meeting-date-badge">2026 / 04 / 16</div>
+          <div class="meeting-entry-title">第二次對齊會議</div>
+        </div>
+        <div class="meeting-section-block">
+          <div class="meeting-section-label">本次三大目標</div>
+          <div class="meeting-items">
+            <div class="meeting-item">
+              <div class="m-num">1</div>
+              <div class="meeting-item-text"><strong>第一階段龍蝦交付</strong>：Phase 1 成果正式驗收，現場展示個人助理龍蝦功能與技術底層交付確認</div>
+            </div>
+            <div class="meeting-item">
+              <div class="m-num">2</div>
+              <div class="meeting-item-text"><strong>第二階段龍蝦討論</strong>：Phase 2 執行規劃對齊，確認 8 隻網軍角色設計方向、合約草擬進度與約 2 個月開發時程</div>
+            </div>
+            <div class="meeting-item">
+              <div class="m-num">3</div>
+              <div class="meeting-item-text"><strong>賴小蝦專案經理（龍蝦專案經理）開發規劃</strong>：獨立專案啟動討論，確認 Line 原生員工介面設計方向，以及蝦小編串接的規格與報價</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
   <div class="top-page" id="page-pm">
@@ -736,7 +854,8 @@
     </div>
 
     <!-- DASHBOARD -->
-    <div class="pm-section-label" style="margin-top: 40px;">後台儀表板 · 可視化管理</div>
+    <div class="pm-section-label" style="margin-top: 40px;">管理介面 · 雙層設計</div>
+    <div style="font-size:12px; color:var(--muted); font-weight:300; margin-bottom:14px; letter-spacing:0.5px;">🖥️ 老闆後台視角</div>
     <div class="pm-dashboard-grid">
       <div class="pm-dash-item">
         <div class="pm-dash-icon">👥</div>
@@ -768,16 +887,103 @@
       </div>
     </div>
 
+    <div class="line-interface-block">
+      <div class="line-interface-block-header"><span>💬 Line 原生員工介面 · 員工視角</span></div>
+      <div class="line-interface-items">
+        <div class="line-interface-item">
+          <div class="line-interface-item-icon">📋</div>
+          <div class="line-interface-item-text">
+            <strong>Line 任務卡片</strong>
+            <span>員工在 Line 收到清晰的任務 Flex Message，一眼看清任務內容、截止日期與負責人</span>
+          </div>
+        </div>
+        <div class="line-interface-item">
+          <div class="line-interface-item-icon">✅</div>
+          <div class="line-interface-item-text">
+            <strong>一鍵操作回覆</strong>
+            <span>完成、延期、請假等操作直接在 Line 完成，無需切換任何工具</span>
+          </div>
+        </div>
+        <div class="line-interface-item">
+          <div class="line-interface-item-icon">📝</div>
+          <div class="line-interface-item-text">
+            <strong>個人待辦清單</strong>
+            <span>員工隨時 @ 龍蝦查詢自己的所有待辦任務與進度，秒速回應</span>
+          </div>
+        </div>
+        <div class="line-interface-item">
+          <div class="line-interface-item-icon">🔔</div>
+          <div class="line-interface-item-text">
+            <strong>智慧提醒推播</strong>
+            <span>依截止時間自動推播提醒到 Line，確保任務不漏接、不遺忘</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- PRICING NOTE -->
     <div class="pm-pricing-note" style="margin-top: 40px;">
-      💡 <strong style="color: var(--text);">報價說明</strong>：將於規劃實作方法與系統規格後提供正式報價，確保報價貼近實際開發範疇。
+      💡 <strong style="color: var(--text);">報價說明</strong>：賴小蝦專案經理主體報價將於規劃實作方法與系統規格後提供，確保報價貼近實際開發範疇。
+    </div>
+
+    <!-- SHRIMP EDITOR SECTION -->
+    <div class="shrimp-editor-section">
+      <div class="section-label purple">獨立子專案 · 蝦小編串接</div>
+
+      <div class="shrimp-editor-intro">
+        <div class="shrimp-editor-intro-title">讓蝦小編成為最懂公司的 AI 助理</div>
+        <div class="shrimp-editor-intro-desc">將賴小蝦專案經理與吳老闆的蝦小編深度串接，讓蝦小編掌握公司所有任務與人員動態，從單純的對話 AI 升級為能主動彙報、提醒、討論的智慧營運夥伴。越用越懂公司，越用越有價值。</div>
+      </div>
+
+      <div class="pm-section-label" style="color: var(--blue);">核心能力</div>
+      <div class="shrimp-editor-grid">
+        <div class="shrimp-editor-item">
+          <div class="shrimp-editor-item-icon">📢</div>
+          <div class="shrimp-editor-item-text">
+            <strong>每日任務彙報</strong>
+            <span>每天定時向老闆彙整全公司任務進度、逾期警示與待關注事項，省去手動追蹤</span>
+          </div>
+        </div>
+        <div class="shrimp-editor-item">
+          <div class="shrimp-editor-item-icon">⏰</div>
+          <div class="shrimp-editor-item-text">
+            <strong>主動提醒機制</strong>
+            <span>根據任務緊急程度與人員狀況，蝦小編主動在適當時機提醒老闆需要介入的事項</span>
+          </div>
+        </div>
+        <div class="shrimp-editor-item">
+          <div class="shrimp-editor-item-icon">💬</div>
+          <div class="shrimp-editor-item-text">
+            <strong>互動討論能力</strong>
+            <span>老闆可直接跟蝦小編對話討論任務、人員安排、進度調整，蝦小編即時查詢後回應</span>
+          </div>
+        </div>
+        <div class="shrimp-editor-item">
+          <div class="shrimp-editor-item-icon">🧠</div>
+          <div class="shrimp-editor-item-text">
+            <strong>公司記憶累積</strong>
+            <span>蝦小編持續學習公司的運作模式、人員習慣與決策風格，越來越懂公司、越來越準確</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="shrimp-editor-pricing">
+        <div class="shrimp-editor-pricing-label">
+          <strong>蝦小編串接 · 獨立開案報價</strong>
+          一次性開發費 + 每月維護費（含模型調校、知識庫更新）
+        </div>
+        <div class="shrimp-editor-pricing-amount">
+          <span class="shrimp-editor-price-main">NT$120,000</span>
+          <span class="shrimp-editor-price-sub">+ NT$8,000 / mo 維護費</span>
+        </div>
+      </div>
     </div>
 
   </div>
 
   <div class="footer">
     <div class="footer-logo">Spera Tech</div>
-    <div class="footer-meta">v1.4 · 2026-04-02<br>提案方：Spera Tech</div>
+    <div class="footer-meta">v1.5 · 2026-04-16<br>提案方：Spera Tech</div>
   </div>
 
 </div>
