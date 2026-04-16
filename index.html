@@ -399,8 +399,44 @@
   .shrimp-editor-price-main { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--blue); display: block; }
   .shrimp-editor-price-sub { font-size: 13px; color: var(--muted); }
 
+  /* PM DELIVERY BLOCKS */
+  .pm-delivery-blocks { display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px; }
+  .pm-delivery-block {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden; transition: border-color 0.2s;
+  }
+  .pm-delivery-block:hover { border-color: rgba(167,139,250,0.4); }
+  .pm-delivery-block.special { border-color: rgba(74,158,255,0.25); }
+  .pm-delivery-block.special:hover { border-color: var(--blue); }
+  .pm-delivery-block-header {
+    display: flex; align-items: center; gap: 16px;
+    padding: 20px 24px; background: var(--surface2); border-bottom: 1px solid var(--border);
+  }
+  .pm-delivery-num {
+    font-family: 'DM Serif Display', serif; font-size: 40px;
+    color: var(--border); line-height: 1; min-width: 48px; transition: color 0.2s;
+  }
+  .pm-delivery-block:hover .pm-delivery-num { color: var(--purple); }
+  .pm-delivery-block.special:hover .pm-delivery-num { color: var(--blue); }
+  .pm-delivery-block-title { font-size: 16px; font-weight: 700; }
+  .pm-special-badge {
+    display: inline-block; background: rgba(74,158,255,0.12);
+    border: 1px solid rgba(74,158,255,0.3); color: var(--blue);
+    font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+    padding: 3px 9px; border-radius: 3px; margin-left: 10px;
+    vertical-align: middle; text-transform: uppercase;
+  }
+  .pm-delivery-block-body { padding: 24px; }
+  .pm-delivery-block-body .pm-workflow { margin-bottom: 0; }
+  .pm-delivery-block-body .pm-dashboard-grid { margin: 0; }
+  .pm-delivery-block-body .line-interface-items { padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .pm-delivery-block-body .shrimp-editor-intro { margin-bottom: 20px; }
+  .pm-delivery-block-body .shrimp-editor-grid { margin-bottom: 20px; }
+
   @media (max-width: 600px) {
-    .line-interface-items, .shrimp-editor-grid { grid-template-columns: 1fr; }
+    .line-interface-items, .shrimp-editor-grid,
+    .pm-delivery-block-body .line-interface-items { grid-template-columns: 1fr; }
+    .pm-delivery-num { font-size: 32px; min-width: 38px; }
   }
 
   /* FOOTER */
@@ -698,6 +734,30 @@
     <div class="meeting-log">
       <div class="meeting-entry">
         <div class="meeting-entry-header">
+          <div class="meeting-date-badge">2026 / 04 / 16</div>
+          <div class="meeting-entry-title">第二次對齊會議</div>
+        </div>
+        <div class="meeting-section-block">
+          <div class="meeting-section-label">本次三大目標</div>
+          <div class="meeting-items">
+            <div class="meeting-item">
+              <div class="m-num">1</div>
+              <div class="meeting-item-text"><strong>第一階段龍蝦交付</strong>：Phase 1 成果正式驗收，現場展示個人助理龍蝦功能與技術底層交付確認</div>
+            </div>
+            <div class="meeting-item">
+              <div class="m-num">2</div>
+              <div class="meeting-item-text"><strong>第二階段龍蝦討論</strong>：Phase 2 執行規劃對齊，確認 8 隻網軍角色設計方向、合約草擬進度與約 2 個月開發時程</div>
+            </div>
+            <div class="meeting-item">
+              <div class="m-num">3</div>
+              <div class="meeting-item-text"><strong>賴小蝦專案經理（龍蝦專案經理）開發規劃</strong>：獨立專案啟動討論，確認 Line 原生員工介面設計方向，以及蝦小編串接的規格與報價</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="meeting-entry">
+        <div class="meeting-entry-header">
           <div class="meeting-date-badge">2026 / 04 / 02</div>
           <div class="meeting-entry-title">第一次對齊會議</div>
         </div>
@@ -750,45 +810,6 @@
 
       </div>
 
-      <div class="meeting-entry">
-        <div class="meeting-entry-header">
-          <div class="meeting-date-badge">2026 / 04 / 15</div>
-          <div class="meeting-entry-title">第二次對齊會議（預計）</div>
-        </div>
-        <div class="meeting-section-block">
-          <div class="meeting-section-label">預定議程</div>
-          <div class="meeting-items">
-            <div class="meeting-item">
-              <div class="m-next">→</div>
-              <div class="meeting-item-text"><strong>Stage 1 交付</strong>：確認 Phase 1 交付成果，現場展示與驗收</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="meeting-entry">
-        <div class="meeting-entry-header">
-          <div class="meeting-date-badge">2026 / 04 / 16</div>
-          <div class="meeting-entry-title">第二次對齊會議</div>
-        </div>
-        <div class="meeting-section-block">
-          <div class="meeting-section-label">本次三大目標</div>
-          <div class="meeting-items">
-            <div class="meeting-item">
-              <div class="m-num">1</div>
-              <div class="meeting-item-text"><strong>第一階段龍蝦交付</strong>：Phase 1 成果正式驗收，現場展示個人助理龍蝦功能與技術底層交付確認</div>
-            </div>
-            <div class="meeting-item">
-              <div class="m-num">2</div>
-              <div class="meeting-item-text"><strong>第二階段龍蝦討論</strong>：Phase 2 執行規劃對齊，確認 8 隻網軍角色設計方向、合約草擬進度與約 2 個月開發時程</div>
-            </div>
-            <div class="meeting-item">
-              <div class="m-num">3</div>
-              <div class="meeting-item-text"><strong>賴小蝦專案經理（龍蝦專案經理）開發規劃</strong>：獨立專案啟動討論，確認 Line 原生員工介面設計方向，以及蝦小編串接的規格與報價</div>
-            </div>
-          </div>
-        </div>
-      </div>
 
     </div>
   </div>
@@ -803,180 +824,199 @@
       </div>
     </div>
 
-    <!-- WORKFLOW -->
-    <div class="pm-section-label">核心 Workflow · 自動化流程</div>
-    <div class="pm-workflow">
+    <!-- DELIVERY BLOCKS -->
+    <div class="pm-delivery-blocks">
 
-      <div class="pm-flow-step">
-        <div class="pm-flow-icon">📋</div>
-        <div class="pm-flow-body">
-          <div class="pm-flow-title">任務指派 → 自動開票</div>
-          <div class="pm-flow-desc">老闆在 Line 群組指派任務，龍蝦自動識別任務內容、負責人、截止日期，建立任務票並回報確認。</div>
+      <!-- BLOCK 01 -->
+      <div class="pm-delivery-block">
+        <div class="pm-delivery-block-header">
+          <div class="pm-delivery-num">01</div>
+          <div class="pm-delivery-block-title">核心 Workflow · 自動化流程</div>
         </div>
-        <div class="pm-flow-arrow">↓</div>
-      </div>
-
-      <div class="pm-flow-step">
-        <div class="pm-flow-icon">⏰</div>
-        <div class="pm-flow-body">
-          <div class="pm-flow-title">截止前主動提醒</div>
-          <div class="pm-flow-desc">依設定時間（如截止前 24 小時、3 小時）自動在 Line 提醒負責員工，確保不漏接。</div>
-        </div>
-        <div class="pm-flow-arrow">↓</div>
-      </div>
-
-      <div class="pm-flow-step">
-        <div class="pm-flow-icon">✅</div>
-        <div class="pm-flow-body">
-          <div class="pm-flow-title">完成回報 → 自動記錄</div>
-          <div class="pm-flow-desc">員工回報完成後，龍蝦自動記錄完成時間、耗時、產出摘要，寫入任務歷史。</div>
-        </div>
-        <div class="pm-flow-arrow">↓</div>
-      </div>
-
-      <div class="pm-flow-step">
-        <div class="pm-flow-icon">🚨</div>
-        <div class="pm-flow-body">
-          <div class="pm-flow-title">逾期 → 通知主管 + 員工</div>
-          <div class="pm-flow-desc">任務逾期未完成，龍蝦立即通知主管與負責員工，標記任務狀態為逾期。</div>
-        </div>
-        <div class="pm-flow-arrow">↓</div>
-      </div>
-
-      <div class="pm-flow-step last">
-        <div class="pm-flow-icon">📢</div>
-        <div class="pm-flow-body">
-          <div class="pm-flow-title">逾期後每日催繳</div>
-          <div class="pm-flow-desc">逾期任務每天自動發送提醒，直到完成或主管手動關閉，不讓任何任務消失在黑洞裡。</div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- DASHBOARD -->
-    <div class="pm-section-label" style="margin-top: 40px;">管理介面 · 雙層設計</div>
-    <div style="font-size:12px; color:var(--muted); font-weight:300; margin-bottom:14px; letter-spacing:0.5px;">🖥️ 老闆後台視角</div>
-    <div class="pm-dashboard-grid">
-      <div class="pm-dash-item">
-        <div class="pm-dash-icon">👥</div>
-        <div class="pm-dash-text">
-          <strong>員工任務總覽</strong>
-          <span>每位員工當前任務量、進行中 / 已完成 / 逾期狀態一覽</span>
-        </div>
-      </div>
-      <div class="pm-dash-item">
-        <div class="pm-dash-icon">📊</div>
-        <div class="pm-dash-text">
-          <strong>KPI 達成狀況</strong>
-          <span>按週 / 月統計各員工任務完成率、準時率、逾期次數</span>
-        </div>
-      </div>
-      <div class="pm-dash-item">
-        <div class="pm-dash-icon">⚡</div>
-        <div class="pm-dash-text">
-          <strong>即時執行狀況</strong>
-          <span>哪些任務正在進行、哪些已逾期、哪些等待回應，即時呈現</span>
-        </div>
-      </div>
-      <div class="pm-dash-item">
-        <div class="pm-dash-icon">🏆</div>
-        <div class="pm-dash-text">
-          <strong>員工表現報告</strong>
-          <span>個人績效歷史紀錄，可匯出作為考核參考依據</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="line-interface-block">
-      <div class="line-interface-block-header"><span>💬 Line 原生員工介面 · 員工視角</span></div>
-      <div class="line-interface-items">
-        <div class="line-interface-item">
-          <div class="line-interface-item-icon">📋</div>
-          <div class="line-interface-item-text">
-            <strong>Line 任務卡片</strong>
-            <span>員工在 Line 收到清晰的任務 Flex Message，一眼看清任務內容、截止日期與負責人</span>
-          </div>
-        </div>
-        <div class="line-interface-item">
-          <div class="line-interface-item-icon">✅</div>
-          <div class="line-interface-item-text">
-            <strong>一鍵操作回覆</strong>
-            <span>完成、延期、請假等操作直接在 Line 完成，無需切換任何工具</span>
-          </div>
-        </div>
-        <div class="line-interface-item">
-          <div class="line-interface-item-icon">📝</div>
-          <div class="line-interface-item-text">
-            <strong>個人待辦清單</strong>
-            <span>員工隨時 @ 龍蝦查詢自己的所有待辦任務與進度，秒速回應</span>
-          </div>
-        </div>
-        <div class="line-interface-item">
-          <div class="line-interface-item-icon">🔔</div>
-          <div class="line-interface-item-text">
-            <strong>智慧提醒推播</strong>
-            <span>依截止時間自動推播提醒到 Line，確保任務不漏接、不遺忘</span>
+        <div class="pm-delivery-block-body">
+          <div class="pm-workflow">
+            <div class="pm-flow-step">
+              <div class="pm-flow-icon">📋</div>
+              <div class="pm-flow-body">
+                <div class="pm-flow-title">任務指派 → 自動開票</div>
+                <div class="pm-flow-desc">老闆在 Line 群組指派任務，龍蝦自動識別任務內容、負責人、截止日期，建立任務票並回報確認。</div>
+              </div>
+              <div class="pm-flow-arrow">↓</div>
+            </div>
+            <div class="pm-flow-step">
+              <div class="pm-flow-icon">⏰</div>
+              <div class="pm-flow-body">
+                <div class="pm-flow-title">截止前主動提醒</div>
+                <div class="pm-flow-desc">依設定時間（如截止前 24 小時、3 小時）自動在 Line 提醒負責員工，確保不漏接。</div>
+              </div>
+              <div class="pm-flow-arrow">↓</div>
+            </div>
+            <div class="pm-flow-step">
+              <div class="pm-flow-icon">✅</div>
+              <div class="pm-flow-body">
+                <div class="pm-flow-title">完成回報 → 自動記錄</div>
+                <div class="pm-flow-desc">員工回報完成後，龍蝦自動記錄完成時間、耗時、產出摘要，寫入任務歷史。</div>
+              </div>
+              <div class="pm-flow-arrow">↓</div>
+            </div>
+            <div class="pm-flow-step">
+              <div class="pm-flow-icon">🚨</div>
+              <div class="pm-flow-body">
+                <div class="pm-flow-title">逾期 → 通知主管 + 員工</div>
+                <div class="pm-flow-desc">任務逾期未完成，龍蝦立即通知主管與負責員工，標記任務狀態為逾期。</div>
+              </div>
+              <div class="pm-flow-arrow">↓</div>
+            </div>
+            <div class="pm-flow-step last">
+              <div class="pm-flow-icon">📢</div>
+              <div class="pm-flow-body">
+                <div class="pm-flow-title">逾期後每日催繳</div>
+                <div class="pm-flow-desc">逾期任務每天自動發送提醒，直到完成或主管手動關閉，不讓任何任務消失在黑洞裡。</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
+      <!-- BLOCK 02 -->
+      <div class="pm-delivery-block">
+        <div class="pm-delivery-block-header">
+          <div class="pm-delivery-num">02</div>
+          <div class="pm-delivery-block-title">管理者後台介面</div>
+        </div>
+        <div class="pm-delivery-block-body">
+          <div class="pm-dashboard-grid">
+            <div class="pm-dash-item">
+              <div class="pm-dash-icon">👥</div>
+              <div class="pm-dash-text">
+                <strong>員工任務總覽</strong>
+                <span>每位員工當前任務量、進行中 / 已完成 / 逾期狀態一覽</span>
+              </div>
+            </div>
+            <div class="pm-dash-item">
+              <div class="pm-dash-icon">📊</div>
+              <div class="pm-dash-text">
+                <strong>KPI 達成狀況</strong>
+                <span>按週 / 月統計各員工任務完成率、準時率、逾期次數</span>
+              </div>
+            </div>
+            <div class="pm-dash-item">
+              <div class="pm-dash-icon">⚡</div>
+              <div class="pm-dash-text">
+                <strong>即時執行狀況</strong>
+                <span>哪些任務正在進行、哪些已逾期、哪些等待回應，即時呈現</span>
+              </div>
+            </div>
+            <div class="pm-dash-item">
+              <div class="pm-dash-icon">🏆</div>
+              <div class="pm-dash-text">
+                <strong>員工表現報告</strong>
+                <span>個人績效歷史紀錄，可匯出作為考核參考依據</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BLOCK 03 -->
+      <div class="pm-delivery-block">
+        <div class="pm-delivery-block-header">
+          <div class="pm-delivery-num">03</div>
+          <div class="pm-delivery-block-title">Line 原生員工介面</div>
+        </div>
+        <div class="pm-delivery-block-body">
+          <div class="line-interface-items">
+            <div class="line-interface-item">
+              <div class="line-interface-item-icon">📋</div>
+              <div class="line-interface-item-text">
+                <strong>Line 任務卡片</strong>
+                <span>員工在 Line 收到清晰的任務 Flex Message，一眼看清任務內容、截止日期與負責人</span>
+              </div>
+            </div>
+            <div class="line-interface-item">
+              <div class="line-interface-item-icon">✅</div>
+              <div class="line-interface-item-text">
+                <strong>一鍵操作回覆</strong>
+                <span>完成、延期、請假等操作直接在 Line 完成，無需切換任何工具</span>
+              </div>
+            </div>
+            <div class="line-interface-item">
+              <div class="line-interface-item-icon">📝</div>
+              <div class="line-interface-item-text">
+                <strong>個人待辦清單</strong>
+                <span>員工隨時 @ 龍蝦查詢自己的所有待辦任務與進度，秒速回應</span>
+              </div>
+            </div>
+            <div class="line-interface-item">
+              <div class="line-interface-item-icon">🔔</div>
+              <div class="line-interface-item-text">
+                <strong>智慧提醒推播</strong>
+                <span>依截止時間自動推播提醒到 Line，確保任務不漏接、不遺忘</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BLOCK 04 -->
+      <div class="pm-delivery-block special">
+        <div class="pm-delivery-block-header">
+          <div class="pm-delivery-num">04</div>
+          <div class="pm-delivery-block-title">蝦小編智能助理串接<span class="pm-special-badge">獨立子專案</span></div>
+        </div>
+        <div class="pm-delivery-block-body">
+          <div class="shrimp-editor-intro">
+            <div class="shrimp-editor-intro-title">讓蝦小編成為最懂公司的 AI 助理</div>
+            <div class="shrimp-editor-intro-desc">將賴小蝦專案經理與吳老闆的蝦小編深度串接，讓蝦小編掌握公司所有任務與人員動態，從單純的對話 AI 升級為能主動彙報、提醒、討論的智慧營運夥伴。越用越懂公司，越用越有價值。</div>
+          </div>
+          <div class="shrimp-editor-grid">
+            <div class="shrimp-editor-item">
+              <div class="shrimp-editor-item-icon">📢</div>
+              <div class="shrimp-editor-item-text">
+                <strong>每日任務彙報</strong>
+                <span>每天定時向老闆彙整全公司任務進度、逾期警示與待關注事項，省去手動追蹤</span>
+              </div>
+            </div>
+            <div class="shrimp-editor-item">
+              <div class="shrimp-editor-item-icon">⏰</div>
+              <div class="shrimp-editor-item-text">
+                <strong>主動提醒機制</strong>
+                <span>根據任務緊急程度與人員狀況，蝦小編主動在適當時機提醒老闆需要介入的事項</span>
+              </div>
+            </div>
+            <div class="shrimp-editor-item">
+              <div class="shrimp-editor-item-icon">💬</div>
+              <div class="shrimp-editor-item-text">
+                <strong>互動討論能力</strong>
+                <span>老闆可直接跟蝦小編對話討論任務、人員安排、進度調整，蝦小編即時查詢後回應</span>
+              </div>
+            </div>
+            <div class="shrimp-editor-item">
+              <div class="shrimp-editor-item-icon">🧠</div>
+              <div class="shrimp-editor-item-text">
+                <strong>公司記憶累積</strong>
+                <span>蝦小編持續學習公司的運作模式、人員習慣與決策風格，越來越懂公司、越來越準確</span>
+              </div>
+            </div>
+          </div>
+          <div class="shrimp-editor-pricing">
+            <div class="shrimp-editor-pricing-label">
+              <strong>蝦小編串接 · 獨立開案報價</strong>
+              一次性開發費 + 每月維護費（含模型調校、知識庫更新）
+            </div>
+            <div class="shrimp-editor-pricing-amount">
+              <span class="shrimp-editor-price-main">NT$120,000</span>
+              <span class="shrimp-editor-price-sub">+ NT$8,000 / mo 維護費</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <!-- PRICING NOTE -->
     <div class="pm-pricing-note" style="margin-top: 40px;">
       💡 <strong style="color: var(--text);">報價說明</strong>：賴小蝦專案經理主體報價將於規劃實作方法與系統規格後提供，確保報價貼近實際開發範疇。
-    </div>
-
-    <!-- SHRIMP EDITOR SECTION -->
-    <div class="shrimp-editor-section">
-      <div class="section-label purple">獨立子專案 · 蝦小編串接</div>
-
-      <div class="shrimp-editor-intro">
-        <div class="shrimp-editor-intro-title">讓蝦小編成為最懂公司的 AI 助理</div>
-        <div class="shrimp-editor-intro-desc">將賴小蝦專案經理與吳老闆的蝦小編深度串接，讓蝦小編掌握公司所有任務與人員動態，從單純的對話 AI 升級為能主動彙報、提醒、討論的智慧營運夥伴。越用越懂公司，越用越有價值。</div>
-      </div>
-
-      <div class="pm-section-label" style="color: var(--blue);">核心能力</div>
-      <div class="shrimp-editor-grid">
-        <div class="shrimp-editor-item">
-          <div class="shrimp-editor-item-icon">📢</div>
-          <div class="shrimp-editor-item-text">
-            <strong>每日任務彙報</strong>
-            <span>每天定時向老闆彙整全公司任務進度、逾期警示與待關注事項，省去手動追蹤</span>
-          </div>
-        </div>
-        <div class="shrimp-editor-item">
-          <div class="shrimp-editor-item-icon">⏰</div>
-          <div class="shrimp-editor-item-text">
-            <strong>主動提醒機制</strong>
-            <span>根據任務緊急程度與人員狀況，蝦小編主動在適當時機提醒老闆需要介入的事項</span>
-          </div>
-        </div>
-        <div class="shrimp-editor-item">
-          <div class="shrimp-editor-item-icon">💬</div>
-          <div class="shrimp-editor-item-text">
-            <strong>互動討論能力</strong>
-            <span>老闆可直接跟蝦小編對話討論任務、人員安排、進度調整，蝦小編即時查詢後回應</span>
-          </div>
-        </div>
-        <div class="shrimp-editor-item">
-          <div class="shrimp-editor-item-icon">🧠</div>
-          <div class="shrimp-editor-item-text">
-            <strong>公司記憶累積</strong>
-            <span>蝦小編持續學習公司的運作模式、人員習慣與決策風格，越來越懂公司、越來越準確</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="shrimp-editor-pricing">
-        <div class="shrimp-editor-pricing-label">
-          <strong>蝦小編串接 · 獨立開案報價</strong>
-          一次性開發費 + 每月維護費（含模型調校、知識庫更新）
-        </div>
-        <div class="shrimp-editor-pricing-amount">
-          <span class="shrimp-editor-price-main">NT$120,000</span>
-          <span class="shrimp-editor-price-sub">+ NT$8,000 / mo 維護費</span>
-        </div>
-      </div>
     </div>
 
   </div>
